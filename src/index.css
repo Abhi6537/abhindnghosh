@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Professional black theme */
+    --background: 0 0% 8%;
+    --foreground: 0 0% 98%;
+
+    /* Dark gray for cards */
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 98%;
+
+    /* Glassmorphic elements */
+    --glass: 0 0% 10%;
+    --glass-foreground: 0 0% 95%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Professional white/gray primary */
+    --primary: 0 0% 95%;
+    --primary-foreground: 0 0% 10%;
+
+    /* Subtle gray secondary */
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    /* Professional accent (subtle gold/white) */
+    --accent: 45 80% 75%;
+    --accent-foreground: 0 0% 10%;
+
+    /* Muted tones */
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 60%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 95%;
+
+    --radius: 1.5rem;
+
+    /* Gradient stops - black to dark gray */
+    --gradient-start: 0 0% 8%;
+    --gradient-mid: 0 0% 10%;
+    --gradient-end: 0 0% 12%;
+
+    /* Professional shadows */
+    --shadow-neumorphic-light: 0 8px 32px rgba(255, 255, 255, 0.05);
+    --shadow-neumorphic-dark: 0 8px 32px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 40px rgba(255, 255, 255, 0.1);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-mid)), hsl(var(--gradient-end)));
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('./assets/background-pattern.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 100;
+    z-index: 0;
+    animation: scrollBackground linear infinite;
+  }
+
+  @keyframes scrollBackground {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100px);
+    }
+  }
+}
+
+@layer utilities {
+  /* Glassmorphic card effect */
+  .glass-card {
+    background: rgb(39, 37, 37);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-neumorphic-light), var(--shadow-neumorphic-dark);
+  }
+
+  /* Neumorphic card */
+  .neumorphic-card {
+    background: hsl(var(--background));
+    box-shadow: 2px 2px 20px rgba(33, 32, 32, 0.6);
+                
+    border-radius: var(--radius);
+  }
+
+  /* Avatar container with glow */
+  .avatar-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent)));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 48px rgba(255, 255, 255, 0.1),
+                0 8px 24px rgba(0, 0, 0, 0.6);
+  }
+}
