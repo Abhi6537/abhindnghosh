@@ -1,4 +1,4 @@
-# Abhinandan Ghosh
+Abhinandan Ghosh
 
 A modern and responsive portfolio website showcasing my projects, skills, and achievements in web development, UI/UX design, and technology.  
 Built with performance, accessibility, and aesthetics in mind.
@@ -47,7 +47,6 @@ Optimized build using Vite
 📬 Contact
 
 Interested in collaborating or offering opportunities?
-Reach out via email ghoshabhinandan290@gmail.com
- or connect on social media.
+Reach out via email ghoshabhinandan290@gmail.com or connect on social media.
 
-© 2025 Abhinandan Ghosh. All rights reserved.
+© 2025 Abhinandan Ghosh. All rights reserved. 
