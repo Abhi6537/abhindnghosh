@@ -5,15 +5,16 @@ import {
   Download,
   Heart,
   Eye,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Button } from "./ui/button";
 
 export const AboutSection = () => {
-  const [activeTab, setActiveTab] = useState<"about" | "resume" | "gallery">(
-    "about"
-  );
+  const [activeTab, setActiveTab] = useState<"about" | "resume" | "gallery">("about");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(6);
 
   const resumeFile = "/resume/resume.pdf";
@@ -44,32 +45,55 @@ export const AboutSection = () => {
     if (activeTab !== "gallery") {
       setVisibleCount(6);
       setSelectedImage(null);
+      setSelectedIndex(null);
     }
   }, [activeTab]);
+
+  // Swipe / Keyboard navigation
+  const showPrev = useCallback(() => {
+    if (selectedIndex !== null && selectedIndex > 0) {
+      setSelectedIndex(selectedIndex - 1);
+      setSelectedImage(galleryImages[selectedIndex - 1]);
+    }
+  }, [selectedIndex, galleryImages]);
+
+  const showNext = useCallback(() => {
+    if (selectedIndex !== null && selectedIndex < galleryImages.length - 1) {
+      setSelectedIndex(selectedIndex + 1);
+      setSelectedImage(galleryImages[selectedIndex + 1]);
+    }
+  }, [selectedIndex, galleryImages]);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (selectedImage) {
+        if (e.key === "ArrowLeft") showPrev();
+        if (e.key === "ArrowRight") showNext();
+        if (e.key === "Escape") setSelectedImage(null);
+      }
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedImage, showNext, showPrev]);
 
   return (
     <section className="animate-fade-in">
       <div className="neumorphic-car p-6 md:p-8">
         <div className="flex items-center gap-3 mb-6">
           <Sparkles className="w-4 h-4 text-accent" />
-          <h2 className="text-lg :text-xl font-bold gradient-text">
-            Who Am I
-          </h2>
+          <h2 className="text-lg :text-xl font-bold gradient-text">Who Am I</h2>
         </div>
 
         <div className="space-y-5">
           <p className="text-sm text-foreground/90 leading-relaxed">
-            Just an ordinary techie who loves mixing code with creativity! A
-            2nd-year IT student at JISCE learning, building, and experimenting
-            with technologies that shape the web.
+            Just an ordinary techie who loves mixing code with creativity! A 2nd-year IT student at
+            JISCE learning, building, and experimenting with technologies that shape the web.
           </p>
 
+          {/* Academics and Hobbies */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Academics */}
             <div className="glass-card p-4 rounded-xl">
-              <h3 className="font-semibold text-foreground text-sm mb-3">
-                Academics
-              </h3>
+              <h3 className="font-semibold text-foreground text-sm mb-3">Academics</h3>
               <div className="space-y-2 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
@@ -86,25 +110,18 @@ export const AboutSection = () => {
               </div>
             </div>
 
-            {/* Hobbies */}
             <div className="glass-card p-4 rounded-xl flex items-start gap-3 hover-lift">
               <Heart className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-foreground text-sm mb-1">
-                  Outside of Tech
-                </h3>
-                <p className="text-xs text-muted-foreground">
-                  Photography | Cricket | Movies
-                </p>
+                <h3 className="font-semibold text-foreground text-sm mb-1">Outside of Tech</h3>
+                <p className="text-xs text-muted-foreground">Photography | Cricket | Movies</p>
               </div>
             </div>
           </div>
 
-          {/* Experience */}
+          {/* Highlights */}
           <div className="glass-card p-4 rounded-xl">
-            <h3 className="font-semibold text-foreground text-sm mb-3">
-              Highlights
-            </h3>
+            <h3 className="font-semibold text-foreground text-sm mb-3">Highlights</h3>
             <div className="space-y-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
@@ -139,13 +156,11 @@ export const AboutSection = () => {
             </button>
           </div>
 
-          {/* Resume Section */}
+          {/* Resume */}
           {activeTab === "resume" && (
             <div className="glass-card p-4 rounded-xl animate-fade-in relative">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-foreground text-sm">
-                  My Resume
-                </h3>
+                <h3 className="font-semibold text-foreground text-sm">My Resume</h3>
                 <div className="flex gap-4 text-xs text-muted-foreground">
                   <button
                     onClick={() => setSelectedImage("resume")}
@@ -165,7 +180,6 @@ export const AboutSection = () => {
                 </div>
               </div>
 
-              {/* Popup */}
               {selectedImage === "resume" && (
                 <div
                   className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
@@ -176,9 +190,7 @@ export const AboutSection = () => {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <div className="flex justify-between items-center p-3 border-b border-white/10">
-                      <h4 className="text-sm font-medium text-foreground">
-                        Abhinandan Ghosh - Resume
-                      </h4>
+                      <h4 className="text-sm font-medium text-foreground">Abhinandan Ghosh - Resume</h4>
                       <button
                         onClick={() => setSelectedImage(null)}
                         className="text-xs hover:text-accent transition-colors"
@@ -186,34 +198,47 @@ export const AboutSection = () => {
                         Close
                       </button>
                     </div>
-                    <iframe
-                      src={resumeFile}
-                      className="w-full flex-1"
-                      title="Resume Preview"
-                    />
+                    <iframe src={resumeFile} className="w-full flex-1" title="Resume Preview" />
                   </div>
                 </div>
               )}
             </div>
           )}
 
-          {/* Gallery Section */}
+          {/* Gallery */}
           {activeTab === "gallery" && (
             <div className="glass-card p-4 rounded-xl animate-fade-in relative">
-              <h3 className="font-semibold text-foreground text-sm mb-3">
-                no context, just vibes
-              </h3>
+              <h3 className="font-semibold text-foreground text-sm mb-3">no context, just vibes</h3>
 
-              {selectedImage && (
+              {/* Popup with arrows */}
+              {selectedImage && selectedIndex !== null && (
                 <div
-                  className="fixed inset-0 bg-black/70 flex items-center justify-center z-50"
+                  className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
                   onClick={() => setSelectedImage(null)}
                 >
-                  <img
-                    src={selectedImage}
-                    alt="Preview"
-                    className="max-w-[90%] max-h-[80vh] rounded-lg shadow-lg border border-white/10"
-                  />
+                  <div className="relative max-w-[90%] max-h-[85vh]" onClick={(e) => e.stopPropagation()}>
+                    <img
+                      src={selectedImage}
+                      alt="Preview"
+                      className="max-h-[85vh] rounded-lg shadow-lg border border-white/10"
+                    />
+                    {selectedIndex > 0 && (
+                      <button
+                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 p-2 rounded-full"
+                        onClick={showPrev}
+                      >
+                        <ChevronLeft className="w-5 h-5 text-white" />
+                      </button>
+                    )}
+                    {selectedIndex < galleryImages.length - 1 && (
+                      <button
+                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 p-2 rounded-full"
+                        onClick={showNext}
+                      >
+                        <ChevronRight className="w-5 h-5 text-white" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -222,13 +247,12 @@ export const AboutSection = () => {
                   <div
                     key={i}
                     className="aspect-square bg-background/50 rounded-lg overflow-hidden hover:scale-[1.03] transition-transform cursor-pointer"
-                    onClick={() => setSelectedImage(src)}
+                    onClick={() => {
+                      setSelectedImage(src);
+                      setSelectedIndex(i);
+                    }}
                   >
-                    <img
-                      src={src}
-                      alt={`Gallery ${i + 1}`}
-                      className="w-full h-full object-cover"
-                    />
+                    <img src={src} alt={`Gallery ${i + 1}`} className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>
