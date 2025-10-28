@@ -29,8 +29,8 @@ const skills = [
 ];
 
 const achievements = [
-  { title: "1st Runner Up", prefix: "at", from: "JISTech | App-e-Teaser", cert: "/certificates/jistech-runnerup.pdf" },
-  { title: "Student Member", prefix: "of", from: "ISTE", cert: "/certificates/hack4bengal.pdf" },
+  { title: "1st Runner Up", prefix: "at", from: "JISTech | App-e-Teaser", cert: "/certificates/jistech.pdf" },
+  { title: "Student Member", prefix: "of", from: "ISTE", cert: "/certificates/Studentchapter.pdf" },
   { title: "Participant", prefix: "in", from: "Hack4Bengal 4.O", cert: "/certificates/hack4bengal.pdf" },
 ];
 
