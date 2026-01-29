@@ -97,7 +97,7 @@ export const AboutSection = () => {
               <div className="space-y-2 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                  <span>Chhay Hazari High School (2011 - 2021)</span>
+                  <span>JIS College Of Engineering (2024 - Present)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
@@ -105,7 +105,7 @@ export const AboutSection = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                  <span>JIS College Of Engineering (2024 - Present)</span>
+                  <span>Chhay Hazari High School (2011 - 2021)</span>
                 </div>
               </div>
             </div>
