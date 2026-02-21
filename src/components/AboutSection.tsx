@@ -125,14 +125,19 @@ export const AboutSection = () => {
             <div className="space-y-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
-                <span>1st runner-up at JISTECH 2k25 App E-Teaser</span>
+                <span>UI/UX Associate | Engineering Modeling (IoT) Club – Core Team, JISCE</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
                 <span>Intern at InAmigos Foundation for two weeks</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent"></span>
+                <span>1st runner-up at JISTECH 2k25 App E-Teaser</span>
               </div>
             </div>
           </div>
+          
 
           {/* Tabs */}
           <div className="flex gap-6 pt-2 text-sm text-muted-foreground">

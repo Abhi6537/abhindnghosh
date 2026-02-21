@@ -1,6 +1,6 @@
 import { MapPin, Github, Linkedin, Mail, Twitter } from "lucide-react";
 import { Button } from "./ui/button";
-import developerAvatar from "../assets/profile2.jpg";
+import developerAvatar from "../assets/profile3.jpg";
 
 export const ProfileCard = () => {
   return (
