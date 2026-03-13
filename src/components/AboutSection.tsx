@@ -3,10 +3,10 @@ import {
   FileText,
   Image as ImageIcon,
   Download,
-  Heart,
   Eye,
   ChevronLeft,
   ChevronRight,
+  Trophy,
 } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "./ui/button";
@@ -16,6 +16,29 @@ export const AboutSection = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [visibleCount, setVisibleCount] = useState(6);
+
+  const hackathons = [
+    {
+      title: "JISTech 2k25",
+      result: "1st Runner-Up",
+      date: "Jan 2025",
+    },
+    {
+      title: "Hack4Bengal 4.0",
+      result: "Participant",
+      date: "Aug 2024",
+    },
+    {
+      title: "Smart India Hackathon 2025",
+      result: "Participant",
+      date: "2025",
+    },
+    {
+      title: "Diversion 2k26",
+      result: "Participant",
+      date: "2026",
+    },
+  ];
 
   const resumeFile = "/resume/resume.pdf";
 
@@ -110,11 +133,23 @@ export const AboutSection = () => {
               </div>
             </div>
 
-            <div className="glass-card p-4 rounded-xl flex items-start gap-3 hover-lift">
-              <Heart className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-              <div>
-                <h3 className="font-semibold text-foreground text-sm mb-1">Outside of Tech</h3>
-                <p className="text-xs text-muted-foreground">Photography | Cricket | Movies</p>
+            <div className="glass-card p-4 rounded-xl hover-lift">
+              <div className="flex items-center gap-2 mb-3">
+                <Trophy className="w-4 h-4 text-accent flex-shrink-0" />
+                <h3 className="font-semibold text-foreground text-sm">Hackathons</h3>
+              </div>
+              <div className="space-y-2 text-xs text-muted-foreground">
+                {hackathons.map((hack) => (
+                  <div key={hack.title} className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0"></span>
+                      <span className="truncate">{hack.title}</span>
+                    </div>
+                    <span className="px-2 py-0.5 text-[10px] font-medium bg-accent/20 text-accent rounded-full whitespace-nowrap">
+                      {hack.result}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -159,6 +194,7 @@ export const AboutSection = () => {
               <ImageIcon className="w-4 h-4" />
               Gallery
             </button>
+
           </div>
 
           {/* Resume */}
@@ -278,6 +314,8 @@ export const AboutSection = () => {
               </p>
             </div>
           )}
+
+
         </div>
       </div>
     </section>

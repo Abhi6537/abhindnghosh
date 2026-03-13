@@ -3,6 +3,7 @@ import { ProfileCard } from "@/components/ProfileCard";
 import { AboutSection } from "@/components/AboutSection";
 import { TechStack } from "@/components/TechStack";
 import { ProjectsSection } from "@/components/ProjectsSection";
+import { GitHubRepos } from "@/components/GitHubRepos";
 import { ContactSection } from "@/components/ContactSection";
 import { BottomNavigation } from "@/components/BottomNavigation";
 
@@ -27,7 +28,12 @@ const Index = () => {
       case "skills":
         return <TechStack />;
       case "projects":
-        return <ProjectsSection />;
+        return (
+          <div className="space-y-6">
+            <ProjectsSection />
+            <GitHubRepos />
+          </div>
+        );
       case "contact":
         return <ContactSection />;
       default:

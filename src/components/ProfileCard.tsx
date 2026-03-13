@@ -33,7 +33,7 @@ export const ProfileCard = () => {
 
           {/* Bio */}
           <p className="text-xs text-foreground/90 max-w-md">
-            JISTech 2k25 Winner | Hack4Bengal 4.O Participant
+            UI/UX Associate | Engineering Modeling (IoT) Club
           </p>
 
           {/* Stats */}
