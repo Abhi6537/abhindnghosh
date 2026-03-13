@@ -1,8 +1,18 @@
-import { MapPin, Github, Linkedin, Mail, Twitter } from "lucide-react";
+import { MapPin, Github, Linkedin, Mail, Twitter, Eye } from "lucide-react";
 import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
 import developerAvatar from "../assets/profile3.jpg";
 
 export const ProfileCard = () => {
+  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("https://api.countapi.xyz/hit/abhindn.me/visits")
+      .then((res) => res.json())
+      .then((data) => setVisitorCount(data.value))
+      .catch(() => setVisitorCount(null));
+  }, []);
+
   return (
     <section className="animate-fade-in">
       {/* Add neumorphic only for md and above */}
@@ -13,7 +23,7 @@ export const ProfileCard = () => {
             <div className="w-36 h-36 md:w-40 md:h-40 rounded-2xl overflow-hidden">
               <img
                 src={developerAvatar}
-                alt="Developer Avatar"
+                alt="Abhinandan Ghosh - Developer"
                 className="w-full h-full object-cover rounded-3xl"
               />
             </div>
@@ -26,7 +36,7 @@ export const ProfileCard = () => {
               Abhinandan Ghosh
             </p>
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground pt-1">
-              <span className="w-2 h-2 bg-accent rounded-full animate-glow-pulse"></span>
+              <span className="w-2 h-2 bg-accent rounded-full animate-glow-pulse" aria-hidden="true"></span>
               <span>Web Developer</span>
             </div>
           </div>
@@ -37,7 +47,7 @@ export const ProfileCard = () => {
           </p>
 
           {/* Stats */}
-          <div className="flex gap-10 pt-5">
+          <div className="flex gap-8 pt-5">
             <div className="text-center">
               <div className="text-xl font-bold text-primary">1X</div>
               <div className="text-xs text-muted-foreground">Hackathon Winner</div>
@@ -46,6 +56,13 @@ export const ProfileCard = () => {
               <div className="text-xl font-bold text-primary">5+</div>
               <div className="text-xs text-muted-foreground">Projects</div>
             </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1 text-xl font-bold text-primary">
+                <Eye className="w-4 h-4" />
+                {visitorCount !== null ? visitorCount.toLocaleString() : "—"}
+              </div>
+              <div className="text-xs text-muted-foreground">Visitors</div>
+            </div>
           </div>
 
           {/* Location */}
@@ -53,7 +70,8 @@ export const ProfileCard = () => {
             href="https://maps.app.goo.gl/sSHe6UQkKjD2Dx6f6?g_st=com.google.maps.preview.copy"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors focus-ring rounded-lg px-2 py-1"
+            aria-label="View location: Kalyani on Google Maps"
           >
             <MapPin className="w-4 h-4" />
             <span>Kalyani</span>
@@ -65,7 +83,8 @@ export const ProfileCard = () => {
               href="https://github.com/Abhi6537"
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-card p-2.5 rounded-xl hover-lift group"
+              className="glass-card p-2.5 rounded-xl hover-lift group focus-ring"
+              aria-label="GitHub profile"
             >
               <Github className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
             </a>
@@ -73,7 +92,8 @@ export const ProfileCard = () => {
               href="https://www.linkedin.com/in/abhinandan-ghosh-jis"
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-card p-2.5 rounded-xl hover-lift group"
+              className="glass-card p-2.5 rounded-xl hover-lift group focus-ring"
+              aria-label="LinkedIn profile"
             >
               <Linkedin className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
             </a>
@@ -81,13 +101,15 @@ export const ProfileCard = () => {
               href="https://x.com/abhinan38886951"
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-card p-2.5 rounded-xl hover-lift group"
+              className="glass-card p-2.5 rounded-xl hover-lift group focus-ring"
+              aria-label="Twitter profile"
             >
               <Twitter className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
             </a>
             <a
               href="mailto:ghoshabhinandan290@gmail.com"
-              className="glass-card p-2.5 rounded-xl hover-lift group"
+              className="glass-card p-2.5 rounded-xl hover-lift group focus-ring"
+              aria-label="Send email"
             >
               <Mail className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
             </a>
@@ -97,7 +119,7 @@ export const ProfileCard = () => {
           <Button
             variant="link"
             size="sm"
-            className="text-xs mt-2"
+            className="text-xs mt-2 focus-ring"
             onClick={() => {
               const event = new CustomEvent("switchTab", { detail: "about" });
               window.dispatchEvent(event);
