@@ -1,17 +1,43 @@
-import { MapPin, Github, Linkedin, Mail, Twitter, Eye } from "lucide-react";
+import { MapPin, Github, Linkedin, Mail, Twitter, Heart } from "lucide-react";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import developerAvatar from "../assets/profile3.jpg";
 
+const LIKED_KEY = "portfolio_liked";
+
 export const ProfileCard = () => {
-  const [visitorCount, setVisitorCount] = useState<number | null>(null);
+  const [likeCount, setLikeCount] = useState<number | null>(null);
+  const [hasLiked, setHasLiked] = useState(() => localStorage.getItem(LIKED_KEY) === "true");
+  const [animating, setAnimating] = useState(false);
 
   useEffect(() => {
-    fetch("https://api.countapi.xyz/hit/abhindn.me/visits")
-      .then((res) => res.json())
-      .then((data) => setVisitorCount(data.value))
-      .catch(() => setVisitorCount(null));
+    supabase
+      .from("likes")
+      .select("count")
+      .eq("id", 1)
+      .single()
+      .then(({ data }) => {
+        if (data) setLikeCount(data.count);
+      });
   }, []);
+
+  const handleLike = async () => {
+    if (hasLiked || likeCount === null) return;
+
+    setAnimating(true);
+    const newCount = likeCount + 1;
+    setLikeCount(newCount);
+    setHasLiked(true);
+    localStorage.setItem(LIKED_KEY, "true");
+
+    await supabase
+      .from("likes")
+      .update({ count: newCount })
+      .eq("id", 1);
+
+    setTimeout(() => setAnimating(false), 600);
+  };
 
   return (
     <section className="animate-fade-in">
@@ -56,11 +82,26 @@ export const ProfileCard = () => {
               <div className="text-xs text-muted-foreground">Projects</div>
             </div>
             <div className="text-center">
-              <div className="flex items-center justify-center gap-1 text-xl font-bold text-primary">
-                <Eye className="w-4 h-4" />
-                {visitorCount !== null ? visitorCount.toLocaleString() : "—"}
+              <button
+                onClick={handleLike}
+                disabled={hasLiked || likeCount === null}
+                className={`flex items-center justify-center gap-1.5 text-xl font-bold transition-all duration-300 focus-ring rounded-lg px-2 mx-auto ${
+                  hasLiked ? "text-accent" : "text-primary hover:text-accent/80"
+                } ${animating ? "scale-110" : ""}`}
+                aria-label="Like portfolio"
+              >
+                <Heart
+                  className={`w-4 h-4 transition-all duration-300 ${
+                    hasLiked ? "fill-accent text-accent" : ""
+                  }`}
+                />
+                <span className="min-w-[1ch] text-left">
+                  {likeCount !== null ? likeCount.toLocaleString() : "—"}
+                </span>
+              </button>
+              <div className="text-xs text-muted-foreground mt-1">
+                {hasLiked ? "Loved it!" : "Likes"}
               </div>
-              <div className="text-xs text-muted-foreground">Visitors</div>
             </div>
           </div>
 
