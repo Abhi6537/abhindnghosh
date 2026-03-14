@@ -9,6 +9,7 @@ interface Review {
   rating: number;
   suggestion: string | null;
   created_at: string;
+  ip_address?: string;
 }
 
 export const ReviewsSection = () => {
@@ -21,24 +22,52 @@ export const ReviewsSection = () => {
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [suggestion, setSuggestion] = useState("");
+  
+  const [userIp, setUserIp] = useState<string | null>(null);
+  const [existingReviewId, setExistingReviewId] = useState<number | null>(null);
 
-  const fetchReviews = useCallback(async () => {
+  const fetchReviews = useCallback(async (currentIp?: string | null) => {
     try {
       const { data, error } = await supabase
         .from("reviews")
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      setReviews(data || []);
+      
+      const fetchedReviews = data || [];
+      setReviews(fetchedReviews);
+
+      const ipToCheck = currentIp || userIp;
+      if (ipToCheck) {
+        const existing = fetchedReviews.find((r: Review) => r.ip_address === ipToCheck);
+        if (existing) {
+          setName(existing.name);
+          setRating(existing.rating);
+          setSuggestion(existing.suggestion || "");
+          setExistingReviewId(existing.id);
+        }
+      }
     } catch {
       console.error("Failed to fetch reviews");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [userIp]);
 
   useEffect(() => {
-    fetchReviews();
+    const init = async () => {
+      let ip = null;
+      try {
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const { ip: fetchedIp } = await ipRes.json();
+        ip = fetchedIp;
+        setUserIp(ip);
+      } catch (err) {
+        console.error("Failed to fetch IP", err);
+      }
+      fetchReviews(ip);
+    };
+    init();
   }, [fetchReviews]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -48,12 +77,20 @@ export const ReviewsSection = () => {
 
     setSubmitting(true);
     try {
-      const { error } = await supabase.from("reviews").insert([
-        { name: name.trim(), rating, suggestion: suggestion.trim() || null },
-      ]);
-      if (error) throw error;
-      toast.success("Thanks for your review! 🎉");
-      setName(""); setRating(0); setSuggestion("");
+      if (existingReviewId) {
+        const { error } = await supabase
+          .from("reviews")
+          .update({ name: name.trim(), rating, suggestion: suggestion.trim() || null })
+          .eq("id", existingReviewId);
+        if (error) throw error;
+        toast.success("Review updated! 🎉");
+      } else {
+        const { error } = await supabase.from("reviews").insert([
+          { name: name.trim(), rating, suggestion: suggestion.trim() || null, ip_address: userIp },
+        ]);
+        if (error) throw error;
+        toast.success("Thanks for your review! 🎉");
+      }
       fetchReviews();
     } catch {
       toast.error("Failed to submit. Please try again.");
@@ -139,9 +176,15 @@ export const ReviewsSection = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-3 py-1.5 rounded-md bg-accent text-accent-foreground text-xs font-medium hover:bg-accent/90 transition-colors focus-ring flex items-center gap-1"
+              className="px-3 py-1.5 rounded-md bg-accent text-accent-foreground text-xs font-medium hover:bg-accent/90 transition-colors focus-ring flex items-center gap-1 min-w-[60px] justify-center"
             >
-              {submitting ? <Loader2 className="w-3 h-3 animate-spin" /> : <Send className="w-3 h-3" />}
+              {submitting ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : existingReviewId ? (
+                "Update"
+              ) : (
+                <Send className="w-3 h-3" />
+              )}
             </button>
           </div>
         </form>
