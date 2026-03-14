@@ -2,7 +2,7 @@ import { MapPin, Github, Linkedin, Mail, Twitter, Heart } from "lucide-react";
 import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import developerAvatar from "../assets/profile3.jpg";
+import heroImage from "../assets/hero.jpg";
 
 const LIKED_KEY = "portfolio_liked";
 
@@ -83,7 +83,7 @@ export const ProfileCard = () => {
           <div className="relative">
             <div className="w-36 h-36 md:w-40 md:h-40 rounded-2xl overflow-hidden">
               <img
-                src={developerAvatar}
+                src={heroImage}
                 alt="Abhinandan Ghosh - Developer"
                 className="w-full h-full object-cover rounded-3xl"
               />
