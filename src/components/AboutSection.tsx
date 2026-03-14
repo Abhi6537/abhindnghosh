@@ -29,11 +29,6 @@ export const AboutSection = () => {
       date: "Aug 2024",
     },
     {
-      title: "Smart India Hackathon 2025",
-      result: "Participant",
-      date: "2025",
-    },
-    {
       title: "Diversion 2k26",
       result: "Participant",
       date: "2026",
