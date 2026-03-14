@@ -10,8 +10,10 @@ export const ProfileCard = () => {
   const [likeCount, setLikeCount] = useState<number | null>(null);
   const [hasLiked, setHasLiked] = useState(() => localStorage.getItem(LIKED_KEY) === "true");
   const [animating, setAnimating] = useState(false);
+  const [userIp, setUserIp] = useState<string | null>(null);
 
   useEffect(() => {
+    // 1. Fetch total likes
     supabase
       .from("likes")
       .select("count")
@@ -20,7 +22,34 @@ export const ProfileCard = () => {
       .then(({ data }) => {
         if (data) setLikeCount(data.count);
       });
-  }, []);
+
+    // 2. Fetch IP and check if they already liked
+    const checkIpLikeStatus = async () => {
+      try {
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const { ip } = await ipRes.json();
+        setUserIp(ip);
+
+        // Check if this IP is in our DB
+        const { data } = await supabase
+          .from("visitor_likes")
+          .select("ip")
+          .eq("ip", ip)
+          .single();
+
+        if (data) {
+          setHasLiked(true);
+          localStorage.setItem(LIKED_KEY, "true");
+        }
+      } catch (err) {
+        console.error("Failed to check IP like status", err);
+      }
+    };
+
+    if (!hasLiked) {
+      checkIpLikeStatus();
+    }
+  }, [hasLiked]);
 
   const handleLike = async () => {
     if (hasLiked || likeCount === null) return;
@@ -31,10 +60,17 @@ export const ProfileCard = () => {
     setHasLiked(true);
     localStorage.setItem(LIKED_KEY, "true");
 
-    await supabase
-      .from("likes")
-      .update({ count: newCount })
-      .eq("id", 1);
+    try {
+      // 1. Update total count
+      await supabase.from("likes").update({ count: newCount }).eq("id", 1);
+      
+      // 2. Record this IP so they can't like again across devices
+      if (userIp) {
+        await supabase.from("visitor_likes").insert([{ ip: userIp }]);
+      }
+    } catch (err) {
+      console.error("Failed to record like securely", err);
+    }
 
     setTimeout(() => setAnimating(false), 600);
   };
