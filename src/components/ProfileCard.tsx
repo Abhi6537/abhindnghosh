@@ -15,8 +15,7 @@ export const ProfileCard = () => {
 
   return (
     <section className="animate-fade-in">
-      {/* Add neumorphic only for md and above */}
-      <div className="p-6 md:p-10 md:neumorphic-card md:rounded-3xl">
+      <div className="p-6 md:p-10">
         <div className="flex flex-col items-center text-center space-y-4">
           {/* Avatar */}
           <div className="relative">

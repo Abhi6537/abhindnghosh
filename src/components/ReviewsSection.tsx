@@ -81,7 +81,7 @@ export const ReviewsSection = () => {
 
   return (
     <section className="animate-fade-in">
-      <div className="neumorphic-card p-4 md:p-5 space-y-4">
+      <div className="p-4 md:p-5 space-y-4">
         {/* Header with avg rating */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
